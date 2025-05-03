@@ -2,8 +2,7 @@ syntax = "proto3";
 
 package ticketBooking;
 
-options go_package = "github.com/sanjaykishor/rail-connect/proto";
-
+option go_package = "github.com/sanjaykishor/rail-connect/proto";
 
 // Service definition
 service TicketBookingService {
@@ -50,7 +49,6 @@ message GetReceiptResponse {
 }
 
 // Messages for View User Seats by Section
-
 message UserSeat {
     User user = 1;
     string allottedSeat = 2;
@@ -88,8 +86,5 @@ message UpdateUserSeatRequest {
 
 message UpdateUserSeatResponse {
   string message = 1;
-  User   = 2;
+  User updatedUser = 2;
 }
-
-
-
