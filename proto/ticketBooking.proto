@@ -6,7 +6,7 @@ options go_package = "github.com/sanjaykishor/rail-connect/proto";
 
 
 // Service definition
-service TrainService {
+service TicketBookingService {
   rpc PurchaseTicket(PurchaseTicketRequest) returns (PurchaseTicketResponse) {};
   rpc GetReceipt(GetReceiptRequest) returns (GetReceiptResponse) {};
   rpc GetUsersBySection(GetUsersBySectionRequest) returns (GetUsersBySectionResponse) {};
