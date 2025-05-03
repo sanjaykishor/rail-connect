@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package ticketBooking;
+
+options go_package = "github.com/sanjaykishor/rail-connect/proto";
+
+
+// Service definition
+service TrainService {
+  rpc PurchaseTicket(PurchaseTicketRequest) returns (PurchaseTicketResponse) {};
+  rpc GetReceipt(GetReceiptRequest) returns (GetReceiptResponse) {};
+  rpc GetUsersBySection(GetUsersBySectionRequest) returns (GetUsersBySectionResponse) {};
+  rpc RemoveUser(RemoveUserRequest) returns (RemoveUserResponse) {};
+  rpc UpdateUserSeat(UpdateUserSeatRequest) returns (UpdateUserSeatResponse) {};
+}
+
+// Messages for Ticket Purchase
+message PurchaseTicketRequest {
+  User user = 1;
+  string from = 4;
+  string to = 5;
+}
+
+message PurchaseTicketResponse {
+  string message = 1;
+  Receipt receipt = 2;
+}
+
+message Receipt {
+  string from = 1;
+  string to = 2;
+  User user = 3;
+  float pricePaid = 4;
+  Seat seat = 5;
+}
+
+message User {
+  string firstName = 1;
+  string lastName = 2;
+  string email = 3;
+}
+
+// Messages for Receipt Retrieval
+message GetReceiptRequest {
+  string email = 1;
+}
+
+message GetReceiptResponse {
+  Receipt receipt = 1;
+}
+
+// Messages for View User Seats by Section
+
+message UserSeat {
+    User user = 1;
+    string allottedSeat = 2;
+}
+
+message GetUsersBySectionRequest {
+  string section = 1;
+}
+
+message GetUsersBySectionResponse {
+  string section = 1;
+  repeated UserSeat users = 2;
+}
+
+message Seat {
+  string section = 1;
+  string seatNumber = 2;
+}
+
+// Messages for User Removal
+message RemoveUserRequest {
+  string email = 1;
+}
+
+message RemoveUserResponse {
+  string message = 1;
+  User removedUser = 2;
+}
+
+// Messages for Seat Modification
+message UpdateUserSeatRequest {
+  string email = 1;
+  string newSeat = 2;
+}
+
+message UpdateUserSeatResponse {
+  string message = 1;
+  User   = 2;
+}
+
+
+
