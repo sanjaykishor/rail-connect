@@ -1,0 +1,11 @@
+# config/config.yaml
+server:
+  port: ":50051" # gRPC server port
+log_level: "info" # "debug", "info", "warn", "error"
+sections:
+  - name: "A"
+    max_seats: 50
+  - name: "B"
+    max_seats: 50
+stations:
+  London-France: 20.00
