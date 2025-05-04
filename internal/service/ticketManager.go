@@ -44,8 +44,6 @@ func (tm *TicketManager) BookTicket(ctx context.Context, req *pb.PurchaseTicketR
 
 	// Validate the request
 	if req == nil {
-		tm.Logger.Info("BookTicket request received-----")
-
 		tm.Logger.Error("BookTicket request is nil")
 		return nil, status.Error(codes.InvalidArgument, "request is nil")
 	}
