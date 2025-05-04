@@ -11,10 +11,10 @@ import (
 )
 
 type Config struct {
-	Server           ServerConfig            `yaml:"server"`
-	LogLevel         string                  `yaml:"log_level"`
-	Sections         []SectionConfig         `yaml:"sections"`
-	Stations         map[string]float64      `yaml:"stations"`
+	Server   ServerConfig       `yaml:"server"`
+	LogLevel string             `yaml:"log_level"`
+	Sections []SectionConfig    `yaml:"sections"`
+	Stations map[string]float64 `yaml:"stations"`
 }
 
 // ServerConfig holds the server-specific configuration.
@@ -28,17 +28,27 @@ type SectionConfig struct {
 	MaxSeats int    `yaml:"max_seats"`
 }
 
-// LoadConfig loads the configuration from the specified YAML file.
-func LoadConfig(filename string) (*Config, error) {
-	buf, err := os.ReadFile(filename)
+// FileReader is an interface for reading files
+type FileReader interface {
+	ReadFile(filename string) ([]byte, error)
+}
+
+type OSFileReader struct{}
+
+func (r OSFileReader) ReadFile(filename string) ([]byte, error) {
+	return os.ReadFile(filename)
+}
+
+// LoadConfig loads configuration from a file using the provided FileReader
+func LoadConfig(filename string, reader FileReader) (*Config, error) {
+	data, err := reader.ReadFile(filename)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read config file: %w", err)
 	}
 
 	var config Config
-	err = yaml.Unmarshal(buf, &config)
-	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal config data: %w", err)
+	if err := yaml.Unmarshal(data, &config); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
 	}
 
 	return &config, nil
@@ -61,17 +71,17 @@ func NewLogger(logLevel string) *zap.Logger {
 	}
 
 	cfg := zap.Config{
-		Encoding:    "json",
-		Level:       level,
-		OutputPaths: []string{"stderr"},
+		Encoding:         "json",
+		Level:            level,
+		OutputPaths:      []string{"stderr"},
 		ErrorOutputPaths: []string{"stderr"},
 		EncoderConfig: zapcore.EncoderConfig{
-			MessageKey:  "message",
-			LevelKey:    "level",
-			TimeKey:     "time",
-			CallerKey:   "caller",
-			EncodeLevel: zapcore.LowercaseLevelEncoder,
-			EncodeTime:  zapcore.ISO8601TimeEncoder,
+			MessageKey:   "message",
+			LevelKey:     "level",
+			TimeKey:      "time",
+			CallerKey:    "caller",
+			EncodeLevel:  zapcore.LowercaseLevelEncoder,
+			EncodeTime:   zapcore.ISO8601TimeEncoder,
 			EncodeCaller: zapcore.ShortCallerEncoder,
 		},
 	}
