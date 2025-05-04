@@ -34,7 +34,7 @@ func main() {
 	purchaseRes1, err := client.PurchaseTicket(context.Background(), &proto.PurchaseTicketRequest{
 		User: user1,
 		From: "London",
-		To:   "Paris",
+		To:   "France",
 	})
 	if err != nil {
 		log.Fatalf("could not purchase ticket: %v", err)
@@ -50,7 +50,7 @@ func main() {
 	purchaseRes2, err := client.PurchaseTicket(context.Background(), &proto.PurchaseTicketRequest{
 		User: user2,
 		From: "London",
-		To:   "Paris",
+		To:   "France",
 	})
 	if err != nil {
 		log.Fatalf("could not purchase ticket: %v", err)
@@ -66,7 +66,7 @@ func main() {
 	purchaseRes3, err := client.PurchaseTicket(context.Background(), &proto.PurchaseTicketRequest{
 		User: user3,
 		From: "London",
-		To:   "Paris",
+		To:   "France",
 	})
 
 	if err != nil {
