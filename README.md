@@ -220,12 +220,18 @@ docker run -d -p 50051:50051 rail-connect
 docker run -d -p 50051:50051 --name rail-connect-service rail-connect
 ```
 
-#### Custom Configuration with Docker:
+### **8. Running the Example Client**
+
+A complete example client implementation is provided:
 
 ```sh
-docker run -d -p 50051:50051 \
-  -v $(pwd)/config/custom-config.yaml:/app/config/config.yaml \
-  rail-connect
+go run client/example.go
+```
+
+### **9. Running Tests**
+
+```sh
+make test
 ```
 
 ## API Usage Examples
@@ -280,16 +286,4 @@ grpcurl -plaintext -d '{
 }' localhost:50051 ticketBooking.TicketBookingService/RemoveUser
 ```
 
-### **6. Running the Example Client**
 
-A complete example client implementation is provided:
-
-```sh
-go run client/example.go
-```
-
-### **7. Running Tests**
-
-```sh
-make test
-```
