@@ -224,15 +224,15 @@ func (tm *TicketManager) GetUsersBySection(ctx context.Context, req *pb.GetUsers
 	}, nil
 }
 
-// UpdateSeat changes the seat assignment for a user.
-func (tm *TicketManager) UpdateSeat(ctx context.Context, req *pb.UpdateUserSeatRequest) (*pb.UpdateUserSeatResponse, error) {
+// UpdateUserSeat changes the seat assignment for a user.
+func (tm *TicketManager) UpdateUserSeat(ctx context.Context, req *pb.UpdateUserSeatRequest) (*pb.UpdateUserSeatResponse, error) {
 	tm.mu.Lock()
 	defer tm.mu.Unlock()
-	tm.Logger.Info("UpdateSeat request received")
+	tm.Logger.Info("UpdateUserSeat request received")
 
 	// Validate the request
 	if req == nil {
-		tm.Logger.Error("UpdateSeat request is nil")
+		tm.Logger.Error("UpdateUserSeat request is nil")
 		return nil, status.Error(codes.InvalidArgument, "request is nil")
 	}
 	// Check if the user is valid
@@ -248,12 +248,12 @@ func (tm *TicketManager) UpdateSeat(ctx context.Context, req *pb.UpdateUserSeatR
 			fields = append(fields, zap.String("new_section", "<nil>"))
 			fields = append(fields, zap.String("new_seat", "<nil>"))
 		}
-		tm.Logger.Error("UpdateSeat request missing required fields", fields...)
+		tm.Logger.Error("UpdateUserSeat request missing required fields", fields...)
 
 		return nil, status.Error(codes.InvalidArgument, "missing required fields")
 	}
 
-	tm.Logger.Info("UpdateSeat request",
+	tm.Logger.Info("UpdateUserSeat request",
 		zap.String("email", req.Email),
 		zap.String("new_section", req.NewSeat.Section),
 		zap.Int32("new_seat", req.NewSeat.SeatNumber),
@@ -262,14 +262,14 @@ func (tm *TicketManager) UpdateSeat(ctx context.Context, req *pb.UpdateUserSeatR
 
 	receipt, exists := tm.Receipts[req.Email]
 	if !exists {
-		tm.Logger.Error("UpdateSeat ticket receipt not found",
+		tm.Logger.Error("UpdateUserSeat ticket receipt not found",
 			zap.String("email", req.Email),
 		)
 		return nil, status.Error(codes.NotFound, "ticket receipt not found")
 	}
 
 	if err := tm.SeatManager.UpdateSeat(int(receipt.Seat.SeatNumber), receipt.Seat.Section, int(req.NewSeat.SeatNumber), req.NewSeat.Section); err != nil {
-		tm.Logger.Error("UpdateSeat failed to update seat",
+		tm.Logger.Error("UpdateUserSeat failed to update seat",
 			zap.String("email", req.Email),
 			zap.String("new_section", req.NewSeat.Section),
 			zap.Int32("new_seat", req.NewSeat.SeatNumber),
@@ -280,7 +280,7 @@ func (tm *TicketManager) UpdateSeat(ctx context.Context, req *pb.UpdateUserSeatR
 
 	receipt.Seat = req.NewSeat
 
-	tm.Logger.Info("UpdateSeat successful",
+	tm.Logger.Info("UpdateUserSeat successful",
 		zap.String("email", req.Email),
 		zap.String("new_section", req.NewSeat.Section),
 		zap.Int32("new_seat", req.NewSeat.SeatNumber),
@@ -292,7 +292,7 @@ func (tm *TicketManager) UpdateSeat(ctx context.Context, req *pb.UpdateUserSeatR
 	}, nil
 }
 
-// RemoveUser cancel a user's ticket and release the seat
+// RemoveUser cancels a user's ticket and releases the seat
 func (tm *TicketManager) RemoveUser(ctx context.Context, req *pb.RemoveUserRequest) (*pb.RemoveUserResponse, error) {
 	tm.mu.Lock()
 	defer tm.mu.Unlock()
@@ -324,6 +324,9 @@ func (tm *TicketManager) RemoveUser(ctx context.Context, req *pb.RemoveUserReque
 		return nil, status.Error(codes.NotFound, "ticket receipt not found")
 	}
 
+	// Store user before removing
+	user := receipt.User
+
 	if err := tm.SeatManager.ReleaseSeat(receipt.Seat.Section, int(receipt.Seat.SeatNumber)); err != nil {
 		tm.Logger.Error("RemoveUser failed to release seat",
 			zap.String("email", req.Email),
@@ -342,6 +345,7 @@ func (tm *TicketManager) RemoveUser(ctx context.Context, req *pb.RemoveUserReque
 		zap.Int32("seat_number", receipt.Seat.SeatNumber),
 	)
 	return &pb.RemoveUserResponse{
-		Message: "Ticket cancelled successfully",
+		Message:     "Ticket cancelled successfully",
+		RemovedUser: user,
 	}, nil
 }

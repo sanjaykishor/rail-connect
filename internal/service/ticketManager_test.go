@@ -349,7 +349,7 @@ func TestUpdateUserSeat(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			response, err := tm.UpdateSeat(context.Background(), test.request)
+			response, err := tm.UpdateUserSeat(context.Background(), test.request)
 			if test.expectedError {
 				assert.Error(t, err)
 				st, ok := status.FromError(err)
