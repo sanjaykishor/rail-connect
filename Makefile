@@ -44,4 +44,19 @@ docker-build:
 	@echo "Building Docker image..."
 	docker build -t rail-connect .
 	@echo "Docker image built!"
+
+docker-run:
+	@echo "Running Docker image..."
+	docker run -p 50051:50051 rail-connect
+	@echo "Docker image is running!"
+
+docker-stop:
+	@echo "Stopping Docker image..."
+	docker stop rail-connect
+	@echo "Docker image stopped!"
+
+docker-clean:
+	@echo "Cleaning Docker image..."
+	docker rm rail-connect
+	@echo "Docker image cleaned!"
 	
