@@ -109,7 +109,7 @@ func TestBookTicket(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			response, err := tm.BookTicket(context.Background(), test.request)
+			response, err := tm.PurchaseTicket(context.Background(), test.request)
 			if test.expectedError {
 				assert.Error(t, err)
 				st, ok := status.FromError(err)

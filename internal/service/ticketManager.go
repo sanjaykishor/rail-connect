@@ -35,16 +35,16 @@ func NewTicketManager(seatManager *SeatManager, connectionStations map[string]fl
 	}
 }
 
-// BookTicket processes a ticket purchase request, assigns a seat, and returns a ticket receipt.
-func (tm *TicketManager) BookTicket(ctx context.Context, req *pb.PurchaseTicketRequest) (*pb.PurchaseTicketResponse, error) {
+// PurchaseTicket processes a ticket purchase request, assigns a seat, and returns a ticket receipt.
+func (tm *TicketManager) PurchaseTicket(ctx context.Context, req *pb.PurchaseTicketRequest) (*pb.PurchaseTicketResponse, error) {
 	tm.mu.Lock()
 	defer tm.mu.Unlock()
 
-	tm.Logger.Info("BookTicket request received")
+	tm.Logger.Info("PurchaseTicket request received")
 
 	// Validate the request
 	if req == nil {
-		tm.Logger.Error("BookTicket request is nil")
+		tm.Logger.Error("PurchaseTicket request is nil")
 		return nil, status.Error(codes.InvalidArgument, "request is nil")
 	}
 
@@ -61,7 +61,7 @@ func (tm *TicketManager) BookTicket(ctx context.Context, req *pb.PurchaseTicketR
 			fields = append(fields, zap.String("user", "<nil>"))
 		}
 
-		tm.Logger.Error("BookTicket request missing required fields", fields...)
+		tm.Logger.Error("PurchaseTicket request missing required fields", fields...)
 		return nil, status.Error(codes.InvalidArgument, "missing required fields")
 	}
 
@@ -72,7 +72,7 @@ func (tm *TicketManager) BookTicket(ctx context.Context, req *pb.PurchaseTicketR
 		return nil, status.Error(codes.AlreadyExists, "User already has a ticket")
 	}
 
-	tm.Logger.Info("BookTicket request",
+	tm.Logger.Info("PurchaseTicket request",
 		zap.String("user", req.User.Email),
 		zap.String("from", req.From),
 		zap.String("to", req.To),
@@ -82,7 +82,7 @@ func (tm *TicketManager) BookTicket(ctx context.Context, req *pb.PurchaseTicketR
 	// Validate the station names
 	connectionStations := fmt.Sprintf("%s-%s", req.From, req.To)
 	if tm.StationConnection[connectionStations] == 0 {
-		tm.Logger.Error("BookTicket invalid station names",
+		tm.Logger.Error("PurchaseTicket invalid station names",
 			zap.String("from", req.From),
 			zap.String("to", req.To),
 			zap.String("connection", connectionStations),
@@ -92,7 +92,7 @@ func (tm *TicketManager) BookTicket(ctx context.Context, req *pb.PurchaseTicketR
 
 	section, seat, err := tm.SeatManager.AssignSeat()
 	if err != nil {
-		tm.Logger.Error("BookTicket failed to assign seat",
+		tm.Logger.Error("PurchaseTicket failed to assign seat",
 			zap.String("user", req.User.Email),
 			zap.String("from", req.From),
 			zap.String("to", req.To),
@@ -111,7 +111,7 @@ func (tm *TicketManager) BookTicket(ctx context.Context, req *pb.PurchaseTicketR
 
 	tm.Receipts[req.User.Email] = receipt
 
-	tm.Logger.Info("BookTicket successful",
+	tm.Logger.Info("PurchaseTicket successful",
 		zap.String("user", req.User.Email),
 		zap.String("from", req.From),
 		zap.String("to", req.To),
