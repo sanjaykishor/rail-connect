@@ -10,8 +10,6 @@ import (
 
 // SeatManager handles the assignment, release, and modification of seats.
 // It uses a round-robin strategy to assign seats across multiple sections.
-// It also tracks the number of available seats in each section and provides
-// functionality to release and update seat assignments.
 type Section struct {
 	Name         string
 	MaxSeats     int
@@ -31,7 +29,7 @@ type SeatManager struct {
 	Sections       map[string]*Section
 	SectionOrder   []string           // Maintains section order for round robin
 	nextSectionIdx int                // Next section index for round-robin assignments
-	mu             sync.Mutex         // Mutex for all operations - simplified locking strategy
+	mu             sync.Mutex        
 	Logger         *zap.Logger
 }
 
@@ -79,12 +77,11 @@ func (sm *SeatManager) AssignSeat() (string, int, error) {
 	// Try each section once, starting from nextSectionIdx
 	totalSections := len(sm.SectionOrder)
 	if totalSections == 0 {
-		return "", -1, fmt.Errorf("no sections available")
+		return "", -1, fmt.Errorf("no available sections")
 	}
 	
 	// Try sections in round-robin order
 	for i := 0; i < totalSections; i++ {
-		// Calculate current section index with wrap-around
 		currentIdx := (sm.nextSectionIdx + i) % totalSections
 		sectionName := sm.SectionOrder[currentIdx]
 		section := sm.Sections[sectionName]
@@ -125,7 +122,6 @@ func (sm *SeatManager) AssignSeat() (string, int, error) {
 			seatNum++
 		}
 		
-		// If we get here for a section that supposedly had vacancies,
 		// there was an inconsistency - fix the count
 		section.VacantSeats = 0
 	}
