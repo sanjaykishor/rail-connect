@@ -8,7 +8,7 @@ GEN_DIR = .
 
 PROTOC = protoc
 
-generate:
+generate-proto:
 	@echo "Installing required plugins..."
 	@echo "Generating code..."
 	$(PROTOC) -I=. \
@@ -19,7 +19,17 @@ generate:
 		$(PROTO_FILE)
 	@echo "Code generation complete!"
 
-clean:
+clean-proto:
 	@echo "Cleaning generated files..."
 	find $(GEN_DIR) -name "*.pb.go" -type f -delete
 	@echo "Clean complete!"
+
+test:
+	@echo "Running tests..."
+	go test -v ./...
+	@echo "Tests complete!"
+
+build:
+	@echo "Building the application..."
+	go build -o rail-connect ./cmd/rail-connect/main.go
+	@echo "Build complete!"
