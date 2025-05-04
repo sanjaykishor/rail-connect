@@ -77,7 +77,7 @@ func main() {
 
 	// Get the ticket for a user
 	getTicketRes, err := client.GetReceipt((context.Background()), &proto.GetReceiptRequest{
-		Email: user1.Email,
+		Email: user3.Email,
 	})
 	if err != nil {
 		log.Fatalf("could not get ticket: %v", err)
