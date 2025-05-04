@@ -30,6 +30,17 @@ test:
 	@echo "Tests complete!"
 
 build:
-	@echo "Building the application..."
-	go build -o rail-connect ./cmd/rail-connect/main.go
+	@echo "Building Go application..."
+	go build -o rail-connect ./cmd/main.go
 	@echo "Build complete!"
+
+run:
+	@echo "Running Go application..."
+	./rail-connect
+	@echo "Application is running!"
+
+docker-build:
+	@echo "Building Docker image..."
+	docker build -t rail-connect .
+	@echo "Docker image built!"
+	
