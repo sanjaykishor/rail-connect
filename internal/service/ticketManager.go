@@ -44,17 +44,26 @@ func (tm *TicketManager) BookTicket(ctx context.Context, req *pb.PurchaseTicketR
 
 	// Validate the request
 	if req == nil {
+		tm.Logger.Info("BookTicket request received-----")
+
 		tm.Logger.Error("BookTicket request is nil")
 		return nil, status.Error(codes.InvalidArgument, "request is nil")
 	}
 
 	// Check if the user is valid
 	if req.User == nil || req.User.Email == "" || req.From == "" || req.To == "" {
-		tm.Logger.Error("BookTicket request missing required fields",
-			zap.String("user", req.User.Email),
+		fields := []zap.Field{
 			zap.String("from", req.From),
 			zap.String("to", req.To),
-		)
+		}
+
+		if req.User != nil {
+			fields = append(fields, zap.String("user_email", req.User.Email))
+		} else {
+			fields = append(fields, zap.String("user", "<nil>"))
+		}
+
+		tm.Logger.Error("BookTicket request missing required fields", fields...)
 		return nil, status.Error(codes.InvalidArgument, "missing required fields")
 	}
 
@@ -84,7 +93,7 @@ func (tm *TicketManager) BookTicket(ctx context.Context, req *pb.PurchaseTicketR
 			zap.String("to", req.To),
 			zap.Error(err),
 		)
-		return nil, status.Error(codes.Internal, "failed to assign seat")
+		return nil, status.Error(codes.NotFound, "failed to assign seat")
 	}
 
 	receipt := &pb.Receipt{
@@ -176,6 +185,14 @@ func (tm *TicketManager) GetUsersBySection(ctx context.Context, req *pb.GetUsers
 		return nil, status.Error(codes.InvalidArgument, "missing required fields")
 	}
 
+	// Check if the section exists
+	if _, exists := tm.SeatManager.Sections[req.Section]; !exists {
+		tm.Logger.Error("GetUsersBySection section not found",
+			zap.String("section", req.Section),
+		)
+		return nil, status.Error(codes.NotFound, "section not found")
+	}
+
 	tm.Logger.Info("GetUsersBySection request",
 		zap.String("section", req.Section),
 		zap.Time("timestamp", time.Now()),
@@ -214,12 +231,19 @@ func (tm *TicketManager) UpdateSeat(ctx context.Context, req *pb.UpdateUserSeatR
 		return nil, status.Error(codes.InvalidArgument, "request is nil")
 	}
 	// Check if the user is valid
-	if req.Email == "" || req.NewSeat.Section == "" || req.NewSeat.SeatNumber == 0 {
-		tm.Logger.Error("UpdateSeat request missing required fields",
+	if req.Email == "" || req.NewSeat == nil || req.NewSeat.Section == "" || req.NewSeat.SeatNumber == 0 {
+		fields := []zap.Field{
 			zap.String("email", req.Email),
-			zap.Int32("new_seat", req.NewSeat.SeatNumber),
-			zap.String("new_section", req.NewSeat.Section),
-		)
+		}
+
+		if req.NewSeat != nil {
+			fields = append(fields, zap.String("new_section", req.NewSeat.Section))
+			fields = append(fields, zap.Int32("new_seat", req.NewSeat.SeatNumber))
+		} else {
+			fields = append(fields, zap.String("new_section", "<nil>"))
+			fields = append(fields, zap.String("new_seat", "<nil>"))
+		}
+		tm.Logger.Error("UpdateSeat request missing required fields", fields...)
 
 		return nil, status.Error(codes.InvalidArgument, "missing required fields")
 	}
@@ -246,7 +270,7 @@ func (tm *TicketManager) UpdateSeat(ctx context.Context, req *pb.UpdateUserSeatR
 			zap.Int32("new_seat", req.NewSeat.SeatNumber),
 			zap.Error(err),
 		)
-		return nil, status.Error(codes.Internal, "failed to update seat")
+		return nil, status.Error(codes.NotFound, "failed to update seat")
 	}
 
 	receipt.Seat = req.NewSeat
@@ -302,7 +326,7 @@ func (tm *TicketManager) RemoveUser(ctx context.Context, req *pb.RemoveUserReque
 			zap.Int32("seat_number", receipt.Seat.SeatNumber),
 			zap.Error(err),
 		)
-		return nil, status.Error(codes.Internal, "failed to release seat")
+		return nil, status.Error(codes.NotFound, "failed to release seat")
 	}
 
 	delete(tm.Receipts, req.Email)
