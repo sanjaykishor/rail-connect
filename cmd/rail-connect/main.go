@@ -19,7 +19,7 @@ import (
 
 func main() {
 	// Load configuration from config.yaml.
-	cfg, err := config.LoadConfig("config/config.yaml")
+	cfg, err := config.LoadConfig("config/config.yaml", config.OSFileReader{})
 	if err != nil {
 		log.Fatalf("Failed to load configuration: %v", err)
 	}
