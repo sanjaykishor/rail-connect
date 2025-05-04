@@ -31,12 +31,13 @@ test:
 
 build:
 	@echo "Building Go application..."
-	go build -o rail-connect ./cmd/main.go
+	mkdir -p ./bin
+	go build -o ./bin/rail-connect ./cmd/rail-connect/main.go
 	@echo "Build complete!"
 
 run:
 	@echo "Running Go application..."
-	./rail-connect
+	./bin/rail-connect
 	@echo "Application is running!"
 
 docker-build:
