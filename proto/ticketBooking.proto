@@ -29,7 +29,7 @@ message Receipt {
   string from = 1;
   string to = 2;
   User user = 3;
-  float pricePaid = 4;
+  double pricePaid = 4;
   Seat seat = 5;
 }
 
@@ -51,7 +51,7 @@ message GetReceiptResponse {
 // Messages for View User Seats by Section
 message UserSeat {
     User user = 1;
-    string allottedSeat = 2;
+    int32 allottedSeat = 2;
 }
 
 message GetUsersBySectionRequest {
@@ -65,7 +65,7 @@ message GetUsersBySectionResponse {
 
 message Seat {
   string section = 1;
-  string seatNumber = 2;
+  int32 seatNumber = 2;
 }
 
 // Messages for User Removal
@@ -81,10 +81,10 @@ message RemoveUserResponse {
 // Messages for Seat Modification
 message UpdateUserSeatRequest {
   string email = 1;
-  string newSeat = 2;
+  Seat newSeat = 2;
 }
 
 message UpdateUserSeatResponse {
   string message = 1;
-  User updatedUser = 2;
+  Receipt updatedReceipt = 2;
 }

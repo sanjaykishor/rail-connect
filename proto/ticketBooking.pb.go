@@ -139,7 +139,7 @@ type Receipt struct {
 	From          string                 `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
 	To            string                 `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
 	User          *User                  `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
-	PricePaid     float32                `protobuf:"fixed32,4,opt,name=pricePaid,proto3" json:"pricePaid,omitempty"`
+	PricePaid     float64                `protobuf:"fixed64,4,opt,name=pricePaid,proto3" json:"pricePaid,omitempty"`
 	Seat          *Seat                  `protobuf:"bytes,5,opt,name=seat,proto3" json:"seat,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -196,7 +196,7 @@ func (x *Receipt) GetUser() *User {
 	return nil
 }
 
-func (x *Receipt) GetPricePaid() float32 {
+func (x *Receipt) GetPricePaid() float64 {
 	if x != nil {
 		return x.PricePaid
 	}
@@ -363,7 +363,7 @@ func (x *GetReceiptResponse) GetReceipt() *Receipt {
 type UserSeat struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	AllottedSeat  string                 `protobuf:"bytes,2,opt,name=allottedSeat,proto3" json:"allottedSeat,omitempty"`
+	AllottedSeat  int32                  `protobuf:"varint,2,opt,name=allottedSeat,proto3" json:"allottedSeat,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -405,11 +405,11 @@ func (x *UserSeat) GetUser() *User {
 	return nil
 }
 
-func (x *UserSeat) GetAllottedSeat() string {
+func (x *UserSeat) GetAllottedSeat() int32 {
 	if x != nil {
 		return x.AllottedSeat
 	}
-	return ""
+	return 0
 }
 
 type GetUsersBySectionRequest struct {
@@ -511,7 +511,7 @@ func (x *GetUsersBySectionResponse) GetUsers() []*UserSeat {
 type Seat struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Section       string                 `protobuf:"bytes,1,opt,name=section,proto3" json:"section,omitempty"`
-	SeatNumber    string                 `protobuf:"bytes,2,opt,name=seatNumber,proto3" json:"seatNumber,omitempty"`
+	SeatNumber    int32                  `protobuf:"varint,2,opt,name=seatNumber,proto3" json:"seatNumber,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -553,11 +553,11 @@ func (x *Seat) GetSection() string {
 	return ""
 }
 
-func (x *Seat) GetSeatNumber() string {
+func (x *Seat) GetSeatNumber() int32 {
 	if x != nil {
 		return x.SeatNumber
 	}
-	return ""
+	return 0
 }
 
 // Messages for User Removal
@@ -661,7 +661,7 @@ func (x *RemoveUserResponse) GetRemovedUser() *User {
 type UpdateUserSeatRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	NewSeat       string                 `protobuf:"bytes,2,opt,name=newSeat,proto3" json:"newSeat,omitempty"`
+	NewSeat       *Seat                  `protobuf:"bytes,2,opt,name=newSeat,proto3" json:"newSeat,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -703,19 +703,19 @@ func (x *UpdateUserSeatRequest) GetEmail() string {
 	return ""
 }
 
-func (x *UpdateUserSeatRequest) GetNewSeat() string {
+func (x *UpdateUserSeatRequest) GetNewSeat() *Seat {
 	if x != nil {
 		return x.NewSeat
 	}
-	return ""
+	return nil
 }
 
 type UpdateUserSeatResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
-	UpdatedUser   *User                  `protobuf:"bytes,2,opt,name=updatedUser,proto3" json:"updatedUser,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Message        string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	UpdatedReceipt *Receipt               `protobuf:"bytes,2,opt,name=updatedReceipt,proto3" json:"updatedReceipt,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *UpdateUserSeatResponse) Reset() {
@@ -755,9 +755,9 @@ func (x *UpdateUserSeatResponse) GetMessage() string {
 	return ""
 }
 
-func (x *UpdateUserSeatResponse) GetUpdatedUser() *User {
+func (x *UpdateUserSeatResponse) GetUpdatedReceipt() *Receipt {
 	if x != nil {
-		return x.UpdatedUser
+		return x.UpdatedReceipt
 	}
 	return nil
 }
@@ -778,7 +778,7 @@ const file_proto_ticketBooking_proto_rawDesc = "" +
 	"\x04from\x18\x01 \x01(\tR\x04from\x12\x0e\n" +
 	"\x02to\x18\x02 \x01(\tR\x02to\x12'\n" +
 	"\x04user\x18\x03 \x01(\v2\x13.ticketBooking.UserR\x04user\x12\x1c\n" +
-	"\tpricePaid\x18\x04 \x01(\x02R\tpricePaid\x12'\n" +
+	"\tpricePaid\x18\x04 \x01(\x01R\tpricePaid\x12'\n" +
 	"\x04seat\x18\x05 \x01(\v2\x13.ticketBooking.SeatR\x04seat\"V\n" +
 	"\x04User\x12\x1c\n" +
 	"\tfirstName\x18\x01 \x01(\tR\tfirstName\x12\x1a\n" +
@@ -790,7 +790,7 @@ const file_proto_ticketBooking_proto_rawDesc = "" +
 	"\areceipt\x18\x01 \x01(\v2\x16.ticketBooking.ReceiptR\areceipt\"W\n" +
 	"\bUserSeat\x12'\n" +
 	"\x04user\x18\x01 \x01(\v2\x13.ticketBooking.UserR\x04user\x12\"\n" +
-	"\fallottedSeat\x18\x02 \x01(\tR\fallottedSeat\"4\n" +
+	"\fallottedSeat\x18\x02 \x01(\x05R\fallottedSeat\"4\n" +
 	"\x18GetUsersBySectionRequest\x12\x18\n" +
 	"\asection\x18\x01 \x01(\tR\asection\"d\n" +
 	"\x19GetUsersBySectionResponse\x12\x18\n" +
@@ -799,19 +799,19 @@ const file_proto_ticketBooking_proto_rawDesc = "" +
 	"\x04Seat\x12\x18\n" +
 	"\asection\x18\x01 \x01(\tR\asection\x12\x1e\n" +
 	"\n" +
-	"seatNumber\x18\x02 \x01(\tR\n" +
+	"seatNumber\x18\x02 \x01(\x05R\n" +
 	"seatNumber\")\n" +
 	"\x11RemoveUserRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\"e\n" +
 	"\x12RemoveUserResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x125\n" +
-	"\vremovedUser\x18\x02 \x01(\v2\x13.ticketBooking.UserR\vremovedUser\"G\n" +
+	"\vremovedUser\x18\x02 \x01(\v2\x13.ticketBooking.UserR\vremovedUser\"\\\n" +
 	"\x15UpdateUserSeatRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\x12\x18\n" +
-	"\anewSeat\x18\x02 \x01(\tR\anewSeat\"i\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\x12-\n" +
+	"\anewSeat\x18\x02 \x01(\v2\x13.ticketBooking.SeatR\anewSeat\"r\n" +
 	"\x16UpdateUserSeatResponse\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage\x125\n" +
-	"\vupdatedUser\x18\x02 \x01(\v2\x13.ticketBooking.UserR\vupdatedUser2\xec\x03\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\x12>\n" +
+	"\x0eupdatedReceipt\x18\x02 \x01(\v2\x16.ticketBooking.ReceiptR\x0eupdatedReceipt2\xec\x03\n" +
 	"\x14TicketBookingService\x12_\n" +
 	"\x0ePurchaseTicket\x12$.ticketBooking.PurchaseTicketRequest\x1a%.ticketBooking.PurchaseTicketResponse\"\x00\x12S\n" +
 	"\n" +
@@ -859,22 +859,23 @@ var file_proto_ticketBooking_proto_depIdxs = []int32{
 	3,  // 5: ticketBooking.UserSeat.user:type_name -> ticketBooking.User
 	6,  // 6: ticketBooking.GetUsersBySectionResponse.users:type_name -> ticketBooking.UserSeat
 	3,  // 7: ticketBooking.RemoveUserResponse.removedUser:type_name -> ticketBooking.User
-	3,  // 8: ticketBooking.UpdateUserSeatResponse.updatedUser:type_name -> ticketBooking.User
-	0,  // 9: ticketBooking.TicketBookingService.PurchaseTicket:input_type -> ticketBooking.PurchaseTicketRequest
-	4,  // 10: ticketBooking.TicketBookingService.GetReceipt:input_type -> ticketBooking.GetReceiptRequest
-	7,  // 11: ticketBooking.TicketBookingService.GetUsersBySection:input_type -> ticketBooking.GetUsersBySectionRequest
-	10, // 12: ticketBooking.TicketBookingService.RemoveUser:input_type -> ticketBooking.RemoveUserRequest
-	12, // 13: ticketBooking.TicketBookingService.UpdateUserSeat:input_type -> ticketBooking.UpdateUserSeatRequest
-	1,  // 14: ticketBooking.TicketBookingService.PurchaseTicket:output_type -> ticketBooking.PurchaseTicketResponse
-	5,  // 15: ticketBooking.TicketBookingService.GetReceipt:output_type -> ticketBooking.GetReceiptResponse
-	8,  // 16: ticketBooking.TicketBookingService.GetUsersBySection:output_type -> ticketBooking.GetUsersBySectionResponse
-	11, // 17: ticketBooking.TicketBookingService.RemoveUser:output_type -> ticketBooking.RemoveUserResponse
-	13, // 18: ticketBooking.TicketBookingService.UpdateUserSeat:output_type -> ticketBooking.UpdateUserSeatResponse
-	14, // [14:19] is the sub-list for method output_type
-	9,  // [9:14] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	9,  // 8: ticketBooking.UpdateUserSeatRequest.newSeat:type_name -> ticketBooking.Seat
+	2,  // 9: ticketBooking.UpdateUserSeatResponse.updatedReceipt:type_name -> ticketBooking.Receipt
+	0,  // 10: ticketBooking.TicketBookingService.PurchaseTicket:input_type -> ticketBooking.PurchaseTicketRequest
+	4,  // 11: ticketBooking.TicketBookingService.GetReceipt:input_type -> ticketBooking.GetReceiptRequest
+	7,  // 12: ticketBooking.TicketBookingService.GetUsersBySection:input_type -> ticketBooking.GetUsersBySectionRequest
+	10, // 13: ticketBooking.TicketBookingService.RemoveUser:input_type -> ticketBooking.RemoveUserRequest
+	12, // 14: ticketBooking.TicketBookingService.UpdateUserSeat:input_type -> ticketBooking.UpdateUserSeatRequest
+	1,  // 15: ticketBooking.TicketBookingService.PurchaseTicket:output_type -> ticketBooking.PurchaseTicketResponse
+	5,  // 16: ticketBooking.TicketBookingService.GetReceipt:output_type -> ticketBooking.GetReceiptResponse
+	8,  // 17: ticketBooking.TicketBookingService.GetUsersBySection:output_type -> ticketBooking.GetUsersBySectionResponse
+	11, // 18: ticketBooking.TicketBookingService.RemoveUser:output_type -> ticketBooking.RemoveUserResponse
+	13, // 19: ticketBooking.TicketBookingService.UpdateUserSeat:output_type -> ticketBooking.UpdateUserSeatResponse
+	15, // [15:20] is the sub-list for method output_type
+	10, // [10:15] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_proto_ticketBooking_proto_init() }
