@@ -17,8 +17,7 @@ RUN go mod download
 COPY . .
 
 # Build the application
-# Adjust the output path to match your main package location
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /rail-connect ./cmd/server/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /rail-connect ./cmd/rail-connect/main.go
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /rail-client ./client/example.go
 
 # Stage 2: Create a minimal runtime image
