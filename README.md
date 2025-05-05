@@ -131,7 +131,6 @@ rail-connect/
 │   └── rail-connect/       # Main server application
 ├── internal/               # Internal packages
 │   ├── config/             # Configuration handling
-│   ├── middleware/         # gRPC middleware
 │   └── service/            # Core business logic
 ├── proto/                  # Protocol Buffer definitions
 ├── client/                 # Example client implementation
