@@ -10,7 +10,7 @@ import (
 )
 
 func TestLoggingInterceptor(t *testing.T) {
-	logger, _ := zap.NewProduction()
+	logger := zap.NewNop()
 	interceptor := LoggingInterceptor(logger)
 
 	ctx := context.Background()

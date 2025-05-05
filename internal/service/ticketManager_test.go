@@ -19,7 +19,7 @@ func createTestTicketManager() *TicketManager {
 		{Name: "A", MaxSeats: 20},
 		{Name: "B", MaxSeats: 20},
 	}
-	logger, _ := zap.NewProduction()
+	logger := zap.NewNop()
 	seatManager := NewSeatManager(sections, logger)
 	connectionStations := map[string]float64{
 		"London-France": 20.00,

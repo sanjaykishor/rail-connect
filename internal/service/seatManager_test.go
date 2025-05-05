@@ -14,7 +14,7 @@ func CreateSeatManager() *SeatManager {
 		{Name: "B", MaxSeats: 20},
 	}
 
-	logger, _ := zap.NewProduction()
+	logger:= zap.NewNop()
 	return NewSeatManager(sectionConfigs, logger)
 }
 
