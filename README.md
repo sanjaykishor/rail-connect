@@ -148,7 +148,6 @@ Rail-Connect is built using Go and follows a clean, modular architecture:
 - **Ticket Manager**: Core business logic for ticket operations
 - **Seat Manager**: Optimized seat allocation using round-robin across sections
 - **Configuration**: YAML-based configuration for sections, pricing, and server settings
-- **Middleware**: Request logging and interceptors
 
 ## Running the Service
 
