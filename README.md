@@ -1,7 +1,7 @@
-# Train Ticket Booking Service - gRPC API
+# rail connect - gRPC API
 
 ## Overview
-The **Train Ticket Booking Service** is a gRPC-based system that allows users to book tickets, retrieve receipts, manage seat assignments, and cancel bookings for rail travel.
+The **Rail Connect** is a gRPC-based system that allows users to book tickets, retrieve receipts, manage seat assignments, and cancel bookings for rail travel.
 
 The system implements seat management with an optimized round-robin allocation strategy across multiple train sections, ensuring balanced seat distribution and efficient resource utilization.
 
