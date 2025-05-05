@@ -1,7 +1,7 @@
 # Train Ticket Booking Service - gRPC API
 
 ## Overview
-The **Train Ticket Booking Service** is a gRPC-based system that allows users to book tickets, retrieve receipts, manage seat assignments, and cancel bookings for rail travel between London and France.
+The **Train Ticket Booking Service** is a gRPC-based system that allows users to book tickets, retrieve receipts, manage seat assignments, and cancel bookings for rail travel.
 
 The system implements seat management with an optimized round-robin allocation strategy across multiple train sections, ensuring balanced seat distribution and efficient resource utilization.
 
@@ -175,19 +175,13 @@ cd rail-connect
 go mod download
 ```
 
-### **4. Generate Protocol Buffer Code**
-
-```sh
-make generate-proto
-```
-
-### **5. Build the Application**
+### **4. Build the Application**
 
 ```sh
 make build
 ```
 
-### **6. Run the Server**
+### **5. Run the Server**
 
 ```sh
 make run
@@ -195,7 +189,7 @@ make run
 ./bin/rail-connect
 ```
 
-### **7. Docker Deployment**
+### **6. Docker Deployment**
 
 #### Building the Docker Image:
 
@@ -220,7 +214,7 @@ docker run -d -p 50051:50051 rail-connect
 docker run -d -p 50051:50051 --name rail-connect-service rail-connect
 ```
 
-### **8. Running the Example Client**
+### **7. Running the Example Client**
 
 A complete example client implementation is provided:
 
@@ -228,62 +222,8 @@ A complete example client implementation is provided:
 go run client/example.go
 ```
 
-### **9. Running Tests**
+### **8. Running Tests**
 
 ```sh
 make test
 ```
-
-## API Usage Examples
-
-### **1. Purchase a Ticket**
-
-```bash
-grpcurl -plaintext -d '{
-  "user": {
-    "firstName": "Sanjay",
-    "lastName": "Kishor",
-    "email": "test@example.com"
-  },
-  "from": "London",
-  "to": "France"
-}' localhost:50051 ticketBooking.TicketBookingService/PurchaseTicket
-```
-
-### **2. Get Receipt**
-
-```bash
-grpcurl -plaintext -d '{
-  "email": "test@example.com"
-}' localhost:50051 ticketBooking.TicketBookingService/GetReceipt
-```
-
-### **3. View Users by Section**
-
-```bash
-grpcurl -plaintext -d '{
-  "section": "A"
-}' localhost:50051 ticketBooking.TicketBookingService/GetUsersBySection
-```
-
-### **4. Update User Seat**
-
-```bash
-grpcurl -plaintext -d '{
-  "email": "test@example.com",
-  "newSeat": {
-    "section": "B",
-    "seatNumber": 25
-  }
-}' localhost:50051 ticketBooking.TicketBookingService/UpdateUserSeat
-```
-
-### **5. Remove User**
-
-```bash
-grpcurl -plaintext -d '{
-  "email": "test@example.com"
-}' localhost:50051 ticketBooking.TicketBookingService/RemoveUser
-```
-
-
