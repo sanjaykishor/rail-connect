@@ -8,7 +8,6 @@ import (
 	"syscall"
 
 	"github.com/sanjaykishor/rail-connect/internal/config"
-	"github.com/sanjaykishor/rail-connect/internal/middleware"
 	"github.com/sanjaykishor/rail-connect/internal/service"
 	pb "github.com/sanjaykishor/rail-connect/proto"
 	"go.uber.org/zap"
@@ -27,10 +26,7 @@ func main() {
 	logger := config.NewLogger(cfg.LogLevel)
 
 	// Create a new gRPC server.
-	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(middleware.ChainUnaryServer(
-			middleware.LoggingInterceptor(logger),
-	)))
+	grpcServer := grpc.NewServer()
 
 	sections := cfg.Sections
 
