@@ -18,7 +18,7 @@ func main() {
 	conn, err := grpc.NewClient(*address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Fatalf("did not connect: %v\n", err)
 	}
 	defer conn.Close()
 
@@ -37,9 +37,9 @@ func main() {
 		To:   "France",
 	})
 	if err != nil {
-		log.Fatalf("could not purchase ticket: %v", err)
+		log.Fatalf("could not purchase ticket: %v\n", err)
 	}
-	log.Printf("Ticket purchased successfully: %v", purchaseRes1.Receipt)
+	log.Printf("Ticket purchased successfully: %v\n", purchaseRes1.Receipt)
 
 	user2 := &proto.User{
 		Email:     "test2@example.com",
@@ -53,9 +53,9 @@ func main() {
 		To:   "France",
 	})
 	if err != nil {
-		log.Fatalf("could not purchase ticket: %v", err)
+		log.Fatalf("could not purchase ticket: %v\n", err)
 	}
-	log.Printf("Ticket purchased successfully: %v", purchaseRes2.Receipt)
+	log.Printf("Ticket purchased successfully: %v\n", purchaseRes2.Receipt)
 
 	user3 := &proto.User{
 		Email:     "test3@example.com",
@@ -70,19 +70,19 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatalf("could not purchase ticket: %v", err)
+		log.Fatalf("could not purchase ticket: %v\n", err)
 	}
 
-	log.Printf("Ticket purchased successfully: %v", purchaseRes3.Receipt)
+	log.Printf("Ticket purchased successfully: %v\n", purchaseRes3.Receipt)
 
 	// Get the ticket for a user
 	getTicketRes, err := client.GetReceipt((context.Background()), &proto.GetReceiptRequest{
 		Email: user3.Email,
 	})
 	if err != nil {
-		log.Fatalf("could not get ticket: %v", err)
+		log.Fatalf("could not get ticket: %v\n", err)
 	}
-	log.Printf("Ticket retrieved successfully: %v", getTicketRes.Receipt)
+	log.Printf("Ticket retrieved successfully: %v\n", getTicketRes.Receipt)
 
 	// get Users by section
 	getUsersRes, err := client.GetUsersBySection(context.Background(), &proto.GetUsersBySectionRequest{
@@ -90,10 +90,10 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatalf("could not get users by section: %v", err)
+		log.Fatalf("could not get users by section: %v\n", err)
 	}
 
-	log.Printf("Users in section %s: %v", getUsersRes.Section, getUsersRes.Users)
+	log.Printf("Users in section %s: %v\n", getUsersRes.Section, getUsersRes.Users)
 
 	// Update the user's seat
 	updateRes, err := client.UpdateUserSeat((context.Background()), &proto.UpdateUserSeatRequest{
@@ -105,16 +105,16 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatalf("could not update user seat: %v", err)
+		log.Fatalf("could not update user seat: %v\n", err)
 	}
-	log.Printf("User seat updated successfully: %v", updateRes)
+	log.Printf("User seat updated successfully: %v\n", updateRes)
 
 	// Remove the user's
 	removeRes, err := client.RemoveUser((context.Background()), &proto.RemoveUserRequest{
 		Email: user1.Email,
 	})
 	if err != nil {
-		log.Fatalf("could not remove user: %v", err)
+		log.Fatalf("could not remove user: %v\n", err)
 	}
-	log.Printf("User removed successfully: %v", removeRes)
+	log.Printf("User removed successfully: %v\n", removeRes)
 }
