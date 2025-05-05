@@ -65,12 +65,13 @@ func (tm *TicketManager) PurchaseTicket(ctx context.Context, req *pb.PurchaseTic
 		return nil, status.Error(codes.InvalidArgument, "missing required fields")
 	}
 
-	if _, exists := tm.Receipts[req.User.Email]; exists {
-		tm.Logger.Error("User already has a ticket",
-			zap.String("user", req.User.Email),
-		)
-		return nil, status.Error(codes.AlreadyExists, "User already has a ticket")
-	}
+	// TODO: To be decided if we want to allow multiple tickets for the same user
+	// if _, exists := tm.Receipts[req.User.Email]; exists {
+	// 	tm.Logger.Error("User already has a ticket",
+	// 		zap.String("user", req.User.Email),
+	// 	)
+	// 	return nil, status.Error(codes.AlreadyExists, "User already has a ticket")
+	// }
 
 	tm.Logger.Info("PurchaseTicket request",
 		zap.String("user", req.User.Email),
